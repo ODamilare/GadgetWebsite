@@ -7,38 +7,42 @@ export default function Hero() {
   const { scrollYProgress } = useScroll();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
+    const mobile = window.innerWidth < 768;
+    setIsMobile(mobile);
 
-    // Force autoplay on mobile
-    if (videoRef.current) {
+    if (!mobile && videoRef.current) {
+      // Desktop autoplay
       videoRef.current.muted = true;
       videoRef.current.playsInline = true;
       const playPromise = videoRef.current.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // fallback if autoplay fails
-          console.log("Autoplay failed on mobile, showing poster.");
-        });
+        playPromise
+          .then(() => console.log("Video playing"))
+          .catch(() => console.log("Autoplay failed"));
       }
+
+      // When video ends, mark as ended to stay on last frame
+      videoRef.current.onended = () => setVideoEnded(true);
     }
   }, []);
 
-  // Reduced motion for performance
+  // Motion effect for scroll (desktop only)
   const scale = useTransform(scrollYProgress, [0, 0.3], [1, 1.08]);
   const y = useTransform(scrollYProgress, [0, 0.3], [0, 70]);
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-black">
-      {/* BACKGROUND VIDEO */}
-      {videoRef.current && (
+      {/* DESKTOP: VIDEO */}
+      {!isMobile && !videoEnded && (
         <motion.video
           ref={videoRef}
           src="/images/video2.mp4"
           autoPlay
           muted
-          loop
+          loop={false} // do not loop
           playsInline
           preload="auto"
           style={{ scale, y }}
@@ -46,11 +50,11 @@ export default function Hero() {
         />
       )}
 
-      {/* FALLBACK POSTER */}
-      {!videoRef.current && (
+      {/* DESKTOP/MOBILE: STATIC LAST FRAME */}
+      {(isMobile || videoEnded) && (
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/hero-poster.jpg')" }}
+          className="absolute inset-0 w-full h-full bg-cover bg-center"
+          style={{ backgroundImage: "url('/images/hero-last-frame.jpg')" }}
         />
       )}
 
