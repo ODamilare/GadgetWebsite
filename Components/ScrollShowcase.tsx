@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -10,11 +10,17 @@ export default function ScrollShowcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   useEffect(() => {
     if (!sectionRef.current || !mediaRef.current) return;
 
-    // GSAP scroll animation
+    // GSAP scroll animation (zoom)
     gsap.fromTo(
       mediaRef.current,
       { scale: 1 },
@@ -35,21 +41,22 @@ export default function ScrollShowcase() {
     };
   }, []);
 
-  // Force autoplay on mobile
   useEffect(() => {
-    if (!videoRef.current) return;
+    if (!videoRef.current || isMobile) return;
 
+    // Desktop autoplay
     videoRef.current.muted = true;
     videoRef.current.playsInline = true;
-
     const playPromise = videoRef.current.play();
     if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        console.log("Autoplay blocked on mobile; retrying...");
-        setTimeout(() => videoRef.current?.play(), 1000);
-      });
+      playPromise
+        .then(() => console.log("Video playing"))
+        .catch(() => console.log("Autoplay failed"));
     }
-  }, []);
+
+    // Stop on last frame
+    videoRef.current.onended = () => setVideoEnded(true);
+  }, [isMobile]);
 
   return (
     <section
@@ -58,17 +65,27 @@ export default function ScrollShowcase() {
     >
       {/* MEDIA WRAPPER */}
       <div ref={mediaRef} className="absolute inset-0">
-        {/* VIDEO */}
-        <video
-          ref={videoRef}
-          src="/images/large.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+        {/* DESKTOP VIDEO */}
+        {!isMobile && !videoEnded && (
+          <video
+            ref={videoRef}
+            src="/images/large.mp4"
+            autoPlay
+            muted
+            loop={false} // do not loop
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        )}
+
+        {/* DESKTOP LAST FRAME OR MOBILE IMAGE */}
+        {(isMobile || videoEnded) && (
+          <div
+            className="absolute inset-0 w-full h-full bg-cover bg-center"
+            style={{ backgroundImage: "url('/images/large-last-frame.jpg')" }}
+          />
+        )}
       </div>
 
       {/* DARK OVERLAY */}
