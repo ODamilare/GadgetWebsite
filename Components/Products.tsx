@@ -76,10 +76,14 @@ function ProductCard({
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
       </motion.div>
 
-      <h3 className="text-xl font-semibold">{title}</h3>
-      <p className="text-gray-400 mt-2">
-        Precision-engineered electronics designed to move with you.
-      </p>
+      <h3 className="text-lg sm:text-xl font-semibold text-white">
+  {title}
+</h3>
+
+<p className="mt-2 text-sm sm:text-base text-gray-400">
+  Precision-engineered electronics designed to move with you.
+</p>
+
     </motion.div>
   );
 }

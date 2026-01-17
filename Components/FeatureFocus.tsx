@@ -25,6 +25,7 @@ export default function FeatureVideo() {
   const [active, setActive] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Sync playback speed
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = features[active].speed;
@@ -32,102 +33,143 @@ export default function FeatureVideo() {
   }, [active]);
 
   return (
-    <section className="relative h-full bg-black overflow-hidden mb-1 md:mb-0">
-      <div className="relative z-10 max-w-7xl mx-auto h-full px-6 flex flex-col gap-12">
+    <section className="relative w-full bg-black py-20 md:py-28 overflow-hidden">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 flex flex-col gap-16">
         
-        {/* Section Title */}
+        {/* SECTION LABEL */}
         <div className="text-center">
-          <h2 className="text-5xl md:text-6xl font-bold text-white">
+          <p className="uppercase tracking-[0.3em] text-xs text-gray-500 mb-4">
+            Product Highlight
+          </p>
+
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white">
             Sony PlayStation Portal
           </h2>
-          <p className="text-gray-400 mt-2 text-lg">
-            Explore the future of gaming and next-gen technology.
+
+          <p className="text-gray-400 mt-4 text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
+            A featured next-generation gaming experience built for immersion,
+            performance, and mobility.
           </p>
         </div>
 
-        {/* Main Grid */}
-        <div className="h-full grid grid-cols-1 md:grid-cols-2 items-center gap-16">
+        {/* MAIN GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-14 md:gap-20">
           
-          {/* LEFT — TEXT */}
-          <div className="space-y-10">
+          {/* LEFT — FEATURE LIST */}
+          <div className="space-y-8">
             {features.map((f, i) => (
-              <div
+              <button
                 key={i}
-                onMouseEnter={() => setActive(i)}
-                className="cursor-pointer"
+                onClick={() => setActive(i)}
+                className="block text-left focus:outline-none group"
               >
                 <motion.h3
-                  animate={{ opacity: active === i ? 1 : 0.4 }}
-                  className="text-4xl font-semibold text-white"
+                  animate={{ opacity: active === i ? 1 : 0.45 }}
+                  className="
+                    text-xl sm:text-2xl md:text-4xl
+                    font-semibold text-white
+                    group-hover:opacity-100
+                    transition
+                  "
                 >
                   {f.title}
                 </motion.h3>
 
                 {active === i && (
                   <motion.p
-                    initial={{ y: 20, opacity: 0 }}
+                    initial={{ y: 12, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className="text-gray-400 mt-3 max-w-md"
+                    transition={{ duration: 0.35 }}
+                    className="text-gray-400 mt-2 text-sm sm:text-base max-w-md"
                   >
                     {f.desc}
                   </motion.p>
                 )}
-              </div>
+              </button>
             ))}
           </div>
 
-       {/* RIGHT — VIDEO with dotted blur and play button */}
-<motion.div
-  animate={{
-    scale: active === 0 ? 1.05 : 1,
-    rotate: active === 1 ? -2 : active === 2 ? 2 : 0,
-  }}
-  transition={{ duration: 0.8, ease: "easeOut" }}
-  className="relative w-full h-[500px] md:h-[600px] rounded-3xl overflow-hidden bg-zinc-900"
->
-  {/* Video */}
-  <video
-    ref={videoRef}
-    src="/images/device.mp4"
-    autoPlay
-    loop
-    muted
-    playsInline
-    className="w-full h-full object-cover"
-  />
+          {/* RIGHT — FEATURED VIDEO */}
+          <motion.div
+            animate={{
+              scale: active === 0 ? 1.03 : 1,
+              rotate: active === 1 ? -1.5 : active === 2 ? 1.5 : 0,
+            }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="
+              relative
+              w-full
+              max-w-[520px]
+              mx-auto
+              h-[300px]
+              sm:h-[380px]
+              md:h-[480px]
+              rounded-2xl
+              overflow-hidden
+              bg-zinc-900
+              shadow-[0_40px_120px_rgba(0,0,0,0.8)]
+            "
+          >
+            {/* BLURRED BACKGROUND VIDEO (STATIC) */}
+            <video
+              src="/images/device.mp4"
+              muted
+              playsInline
+              preload="metadata"
+              className="
+                absolute inset-0
+                w-full h-full
+                object-cover
+                blur-xl
+                scale-110
+                opacity-60
+              "
+            />
 
-  {/* Dotted Blurry Overlay */}
-  <div
-    className="absolute inset-0 rounded-3xl pointer-events-none"
-    style={{
-      background:
-        "repeating-radial-gradient(rgba(0,0,0,0.1) 0 1px, transparent 1px 4px)", // tiny dots
-      backdropFilter: "blur(12px)",
-    }}
-  />
+            {/* MAIN AUTOPLAY VIDEO */}
+            <video
+              ref={videoRef}
+              src="/images/device.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              className="
+                absolute inset-0
+                w-full h-full
+                object-cover
+              "
+            />
 
-  {/* Play Button */}
-  <a
-    href="https://youtu.be/KPgBMPkWXeg" // replace with your link
-    target="_blank"
-    rel="noopener noreferrer"
-    className="absolute inset-0 flex items-center justify-center"
-  >
-    <div className="w-20 h-20 md:w-24 md:h-24 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white/40 transition cursor-pointer">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="white"
-        viewBox="0 0 24 24"
-        strokeWidth={0}
-        stroke="none"
-        className="w-10 h-10 md:w-12 md:h-12 ml-1"
-      >
-        <path d="M5 3v18l15-9L5 3z" />
-      </svg>
-    </div>
-  </a>
-</motion.div>
+            {/* DARK GRADIENT */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
+            {/* PLAY CTA */}
+            <a
+              href="https://youtu.be/KPgBMPkWXeg"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <div className="
+                w-16 h-16 sm:w-20 sm:h-20
+                bg-white/20 backdrop-blur-md
+                rounded-full
+                flex items-center justify-center
+                hover:bg-white/40 transition
+              ">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="white"
+                  viewBox="0 0 24 24"
+                  className="w-8 h-8 sm:w-10 sm:h-10 ml-1"
+                >
+                  <path d="M5 3v18l15-9L5 3z" />
+                </svg>
+              </div>
+            </a>
+          </motion.div>
         </div>
       </div>
     </section>

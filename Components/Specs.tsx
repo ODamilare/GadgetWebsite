@@ -34,7 +34,7 @@ export default function Specs() {
             className="text-center"
           >
             {/* Value */}
-            <h3 className="text-6xl md:text-7xl font-bold tracking-tight">
+            <h3 className="text-6xl md:text-7xl font-bold tracking-tight text-white">
               {s.value}
             </h3>
 
@@ -44,7 +44,7 @@ export default function Specs() {
             </p>
 
             {/* Description */}
-            <p className="mt-2 text-sm text-gray-400 max-w-xs mx-auto">
+            <p className="mt-2 text-sm text-white md:text-gray-400 max-w-xs mx-auto">
               {s.desc}
             </p>
           </motion.div>

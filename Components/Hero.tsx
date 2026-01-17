@@ -1,56 +1,51 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Hero() {
   const { scrollYProgress } = useScroll();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [ended, setEnded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  /* Reduce motion intensity on mobile */
-  const scale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1]);
-  const y = useTransform(scrollYProgress, [0, 0.3], [0, 80]);
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
+  /* Reduced motion for performance */
+  const scale = useTransform(scrollYProgress, [0, 0.3], [1, 1.08]);
+  const y = useTransform(scrollYProgress, [0, 0.3], [0, 70]);
 
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-black">
-      {/* VIDEO */}
-      <motion.div
-        style={{ scale, y }}
-        className="absolute inset-0 will-change-transform"
-      >
-        <video
-          ref={videoRef}
-          src="/images/video2.mp4"
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          onEnded={() => {
-            setEnded(true);
-            videoRef.current?.pause();
-          }}
-          className="
-            absolute inset-0
-            w-full h-full
-            object-cover
-          "
+      {/* BACKGROUND */}
+      {!isMobile ? (
+        <motion.div
+          style={{ scale, y }}
+          className="absolute inset-0 will-change-transform"
+        >
+          <video
+            ref={videoRef}
+            src="/images/video2.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </motion.div>
+      ) : (
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/images/hero-poster.jpg')" }}
         />
-      </motion.div>
+      )}
 
-      {/* POSTER IMAGE (LAST FRAME) */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: ended ? 1 : 0 }}
-        transition={{ duration: 1 }}
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/hero-poster.jpg')" }}
-      />
-
-      {/* Dark overlay */}
+      {/* OVERLAY */}
       <div className="absolute inset-0 bg-black/60" />
 
-      {/* Content */}
+      {/* CONTENT */}
       <div className="relative z-10 min-h-[100svh] flex items-center justify-center px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 60 }}

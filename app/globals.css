@@ -37,3 +37,10 @@ body {
 .no-scrollbar {
   -webkit-overflow-scrolling: touch; /* smooth scroll on mobile */
 }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

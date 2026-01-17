@@ -8,7 +8,7 @@ export default function FinalCTA() {
       <motion.h2
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        className="text-4xl font-semibold"
+        className="text-4xl font-semibold text-white"
       >
         Experience Technology, Reimagined
       </motion.h2>

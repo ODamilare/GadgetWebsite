@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +10,6 @@ export default function ScrollShowcase() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [ended, setEnded] = useState(false);
 
   useEffect(() => {
     if (!sectionRef.current || !mediaRef.current) return;
@@ -26,63 +24,43 @@ export default function ScrollShowcase() {
           start: "top top",
           end: "bottom top",
           scrub: true,
-          pin: false,
         },
       }
     );
 
     return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
+      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
 
   return (
-   <section
-  ref={sectionRef}
-  className="relative min-h-[100svh] md:min-h-screen overflow-hidden bg-black"
->
-  {/* MEDIA WRAPPER */}
-  <div
-    ref={mediaRef}
-    className="absolute inset-0 flex items-center justify-center"
-  >
-    {/* RESPONSIVE MEDIA BOX */}
-    <div
-      className="
-        relative
-        w-full h-full
-        md:aspect-video
-      "
+    <section
+      ref={sectionRef}
+      className="relative min-h-[100svh] md:min-h-screen overflow-hidden bg-black"
     >
-      <video
-        ref={videoRef}
-        src="/images/large.mp4"
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        onEnded={() => {
-          setEnded(true);
-          videoRef.current?.pause();
-        }}
-        className="
-          absolute inset-0
-          w-full h-full
-          object-cover
-        "
-      />
-    </div>
-  </div>
-      {/* POSTER (LAST FRAME) */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: ended ? 1 : 0 }}
-        transition={{ duration: 1 }}
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/showcase-poster.jpg')" }}
-      />
+      {/* MEDIA WRAPPER */}
+      <div
+        ref={mediaRef}
+        className="absolute inset-0"
+      >
+        {/* VIDEO */}
+        <video
+          ref={videoRef}
+          src="/images/large.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="
+            absolute inset-0
+            w-full h-full
+            object-cover
+          "
+        />
+      </div>
 
-      {/* OVERLAY */}
+      {/* DARK OVERLAY */}
       <div className="absolute inset-0 bg-black/60" />
 
       {/* CONTENT */}
@@ -90,8 +68,8 @@ export default function ScrollShowcase() {
         <h2
           className="
             text-center font-bold text-white
-            text-5xl
-            sm:text-4xl
+            text-4xl
+            sm:text-5xl
             md:text-6xl
             lg:text-7xl
             leading-tight
