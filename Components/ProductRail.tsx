@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { useRef, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 
 type Product = {
@@ -26,7 +26,7 @@ export default function ProductRail() {
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
-    const cardWidth = window.innerWidth * 0.7; // 70% of mobile width
+    const cardWidth = window.innerWidth * 0.7; // 70% of screen width on mobile
     scrollRef.current.scrollBy({
       left: direction === "left" ? -cardWidth : cardWidth,
       behavior: "smooth",
@@ -38,15 +38,13 @@ export default function ProductRail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
         {/* Header */}
         <div className="mb-6 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">
-            Product Highlight
-          </h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">Product Highlight</h2>
           <p className="text-sm sm:text-base text-gray-400 mt-2 max-w-md mx-auto">
             Explore our next-generation electronics built for speed, immersion, and intelligence.
           </p>
         </div>
 
-        {/* Left/Right Arrows (desktop only) */}
+        {/* Arrows (desktop only) */}
         <button
           onClick={() => scroll("left")}
           className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/60 hover:bg-black/80 transition"
@@ -63,33 +61,30 @@ export default function ProductRail() {
         {/* Product Rail */}
         <div
           ref={scrollRef}
-          className="
-            flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth
-            touch-pan-x no-scrollbar
-          "
+          className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth touch-pan-x no-scrollbar"
         >
           {products.map((product, index) => (
             <motion.div
               key={product.id}
               onViewportEnter={() => setActiveIndex(index)}
               className={`
-                min-w-[70%] sm:min-w-[45%] md:min-w-[300px] snap-center flex-shrink-0 
-                rounded-2xl overflow-hidden bg-zinc-900 transition-all duration-300
+                flex-shrink-0 w-[70%] sm:w-[45%] md:w-[300px] snap-center rounded-2xl overflow-hidden
+                bg-zinc-900 transition-all duration-300 md:hover:bg-zinc-800/40
                 ${index === activeIndex ? "md:ring-2 md:ring-white/20 md:shadow-[0_20px_50px_rgba(0,0,0,0.7)]" : ""}
               `}
             >
               {/* Image */}
-              <div className="h-64 sm:h-72 md:h-56">
+              <div className="h-48 sm:h-56 md:h-64 w-full flex items-center justify-center bg-zinc-800">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="max-h-full max-w-full object-contain"
                   draggable={false}
                 />
               </div>
 
               {/* Content */}
-              <div className="p-4 sm:p-5 text-center sm:text-left">
+              <div className="p-3 sm:p-4 text-center sm:text-left">
                 <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white">
                   {product.name}
                 </h3>
