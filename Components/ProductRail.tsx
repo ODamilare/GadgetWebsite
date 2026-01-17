@@ -26,7 +26,7 @@ export default function ProductRail() {
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
-    const cardWidth = 280; // width for mobile scroll
+    const cardWidth = 300; // more width for smoother scrolling
     scrollRef.current.scrollBy({
       left: direction === "left" ? -cardWidth : cardWidth,
       behavior: "smooth",
@@ -34,7 +34,7 @@ export default function ProductRail() {
   };
 
   return (
-    <section className="relative w-full py-12 md:py-20 bg-black overflow-hidden">
+    <section className="relative w-full py-16 sm:py-20 md:py-24 bg-black overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
         {/* Header */}
         <div className="mb-8 md:mb-12 text-center md:text-left">
@@ -72,16 +72,13 @@ export default function ProductRail() {
             <motion.div
               key={product.id}
               onViewportEnter={() => setActiveIndex(index)}
-              className={`
-                min-w-[220px] sm:min-w-[260px] md:min-w-[300px]
-                snap-center flex-shrink-0 rounded-2xl overflow-hidden
-                bg-zinc-900 transition-all duration-300
-                md:hover:bg-zinc-800/40
+              className={`min-w-[220px] sm:min-w-[260px] md:min-w-[300px] snap-center flex-shrink-0 rounded-2xl overflow-hidden
+                bg-zinc-900 transition-all duration-300 md:hover:bg-zinc-800/40
                 ${index === activeIndex ? "md:ring-2 md:ring-white/20 md:shadow-[0_20px_50px_rgba(0,0,0,0.7)]" : ""}
               `}
             >
               {/* Image */}
-              <div className="h-40 sm:h-48 md:h-56">
+              <div className="h-56 sm:h-64 md:h-56"> {/* ↑ Increased mobile height */}
                 <img
                   src={product.image}
                   alt={product.name}
