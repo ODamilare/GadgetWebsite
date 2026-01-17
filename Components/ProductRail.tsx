@@ -26,7 +26,7 @@ export default function ProductRail() {
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
-    const cardWidth = 200; // smaller for mobile
+    const cardWidth = window.innerWidth * 0.7; // 70% of mobile width
     scrollRef.current.scrollBy({
       left: direction === "left" ? -cardWidth : cardWidth,
       behavior: "smooth",
@@ -34,14 +34,14 @@ export default function ProductRail() {
   };
 
   return (
-    <section className="relative w-full py-16 sm:py-20 md:py-24 bg-black overflow-hidden">
+    <section className="relative w-full py-12 sm:py-16 bg-black overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
         {/* Header */}
-        <div className="mb-8 md:mb-12 text-center md:text-left">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+        <div className="mb-6 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">
             Product Highlight
           </h2>
-          <p className="text-sm sm:text-base text-gray-400 mt-2 max-w-xl mx-auto md:mx-0">
+          <p className="text-sm sm:text-base text-gray-400 mt-2 max-w-md mx-auto">
             Explore our next-generation electronics built for speed, immersion, and intelligence.
           </p>
         </div>
@@ -64,21 +64,22 @@ export default function ProductRail() {
         <div
           ref={scrollRef}
           className="
-            flex gap-4 sm:gap-6 overflow-x-auto md:overflow-x-hidden
-            snap-x snap-mandatory scroll-smooth touch-pan-x no-scrollbar
+            flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth
+            touch-pan-x no-scrollbar
           "
         >
           {products.map((product, index) => (
             <motion.div
               key={product.id}
               onViewportEnter={() => setActiveIndex(index)}
-              className={`min-w-[160px] sm:min-w-[220px] md:min-w-[300px] snap-center flex-shrink-0 rounded-2xl overflow-hidden
-                bg-zinc-900 transition-all duration-300 md:hover:bg-zinc-800/40
+              className={`
+                min-w-[70%] sm:min-w-[45%] md:min-w-[300px] snap-center flex-shrink-0 
+                rounded-2xl overflow-hidden bg-zinc-900 transition-all duration-300
                 ${index === activeIndex ? "md:ring-2 md:ring-white/20 md:shadow-[0_20px_50px_rgba(0,0,0,0.7)]" : ""}
               `}
             >
               {/* Image */}
-              <div className="h-64 sm:h-64 md:h-56"> {/* taller on mobile */}
+              <div className="h-64 sm:h-72 md:h-56">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -88,7 +89,7 @@ export default function ProductRail() {
               </div>
 
               {/* Content */}
-              <div className="p-4 sm:p-5">
+              <div className="p-4 sm:p-5 text-center sm:text-left">
                 <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white">
                   {product.name}
                 </h3>
