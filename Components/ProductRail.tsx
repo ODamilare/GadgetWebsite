@@ -26,7 +26,7 @@ export default function ProductRail() {
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
-    const cardWidth = 300; // more width for smoother scrolling
+    const cardWidth = 200; // smaller for mobile
     scrollRef.current.scrollBy({
       left: direction === "left" ? -cardWidth : cardWidth,
       behavior: "smooth",
@@ -72,13 +72,13 @@ export default function ProductRail() {
             <motion.div
               key={product.id}
               onViewportEnter={() => setActiveIndex(index)}
-              className={`min-w-[220px] sm:min-w-[260px] md:min-w-[300px] snap-center flex-shrink-0 rounded-2xl overflow-hidden
+              className={`min-w-[160px] sm:min-w-[220px] md:min-w-[300px] snap-center flex-shrink-0 rounded-2xl overflow-hidden
                 bg-zinc-900 transition-all duration-300 md:hover:bg-zinc-800/40
                 ${index === activeIndex ? "md:ring-2 md:ring-white/20 md:shadow-[0_20px_50px_rgba(0,0,0,0.7)]" : ""}
               `}
             >
               {/* Image */}
-              <div className="h-56 sm:h-64 md:h-56"> {/* ↑ Increased mobile height */}
+              <div className="h-64 sm:h-64 md:h-56"> {/* taller on mobile */}
                 <img
                   src={product.image}
                   alt={product.name}
