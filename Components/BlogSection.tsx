@@ -130,7 +130,10 @@ export default function BlogSection() {
             {articles.map((article, index) => (
               <motion.div
                 key={article.id}
-                ref={(el) => (cardRefs.current[index] = el)}
+              ref={(el) => {
+  cardRefs.current[index] = el;
+}}
+
                 className={`min-w-[440px] rounded-2xl overflow-hidden bg-[#0d0d0f] transition-all duration-300 ${
                   activeIndex === index
                     ? "ring-1 ring-white/25 shadow-[0_35px_70px_rgba(0,0,0,0.95),0_0_0_1px_rgba(255,255,255,0.12)]"
