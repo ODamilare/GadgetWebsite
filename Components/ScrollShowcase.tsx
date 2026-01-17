@@ -14,6 +14,7 @@ export default function ScrollShowcase() {
   useEffect(() => {
     if (!sectionRef.current || !mediaRef.current) return;
 
+    // GSAP scroll animation
     gsap.fromTo(
       mediaRef.current,
       { scale: 1 },
@@ -28,9 +29,26 @@ export default function ScrollShowcase() {
       }
     );
 
+    // Cleanup
     return () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
+  }, []);
+
+  // Force autoplay on mobile
+  useEffect(() => {
+    if (!videoRef.current) return;
+
+    videoRef.current.muted = true;
+    videoRef.current.playsInline = true;
+
+    const playPromise = videoRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        console.log("Autoplay blocked on mobile; retrying...");
+        setTimeout(() => videoRef.current?.play(), 1000);
+      });
+    }
   }, []);
 
   return (
@@ -39,10 +57,7 @@ export default function ScrollShowcase() {
       className="relative min-h-[100svh] md:min-h-screen overflow-hidden bg-black"
     >
       {/* MEDIA WRAPPER */}
-      <div
-        ref={mediaRef}
-        className="absolute inset-0"
-      >
+      <div ref={mediaRef} className="absolute inset-0">
         {/* VIDEO */}
         <video
           ref={videoRef}
@@ -52,11 +67,7 @@ export default function ScrollShowcase() {
           loop
           playsInline
           preload="auto"
-          className="
-            absolute inset-0
-            w-full h-full
-            object-cover
-          "
+          className="absolute inset-0 w-full h-full object-cover"
         />
       </div>
 
@@ -68,10 +79,7 @@ export default function ScrollShowcase() {
         <h2
           className="
             text-center font-bold text-white
-            text-4xl
-            sm:text-5xl
-            md:text-6xl
-            lg:text-7xl
+            text-4xl sm:text-5xl md:text-6xl lg:text-7xl
             leading-tight
           "
         >
